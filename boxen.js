@@ -10,11 +10,26 @@ class Box {
     this.createGrid();
   }
 
+  // Methode, um die Box und das Raster zu zeichnen
+  draw() {
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(this.x, this.y, this.width, this.height);
+
+    // Raster zeichnen
+    for (let cell of this.grid) {
+      this.ctx.strokeStyle = "black";
+      this.ctx.strokeRect(cell.x, cell.y, cell.width, cell.height);
+      this.ctx.fillStyle = cell.color;
+      this.ctx.fillRect(cell.x, cell.y, cell.width, cell.height);
+    }
+  }
+
   // Methode, um das Raster zu erstellen
   createGrid(rows = 4, cols = 4) {
     const cellWidth = this.width / cols;
     const cellHeight = this.height / rows;
 
+    // Rasterzellen hinzufügen
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         this.grid.push({
@@ -22,30 +37,14 @@ class Box {
           y: this.y + row * cellHeight,
           width: cellWidth,
           height: cellHeight,
-          clicked: false, // Gibt an, ob das Rechteck angeklickt wurde
+          color: "blue",
+          isSelected: false,
         });
       }
     }
   }
 
-  // Methode, um die Box und das Raster zu zeichnen
-  draw() {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-
-    // Raster zeichnen
-    for (let cell of this.grid) {
-      ctx.strokeStyle = "black";
-      ctx.strokeRect(cell.x, cell.y, cell.width, cell.height);
-
-      if (cell.clicked) {
-        // Wenn ein Rechteck angeklickt wurde, fülle es mit einer Farbe
-        ctx.fillStyle = "rgba(0, 255, 0, 0.3)";
-        ctx.fillRect(cell.x, cell.y, cell.width, cell.height);
-      }
-    }
-  }
-  // Überprüfen, ob ein Klick auf ein Rechteck im Raster erfolgt ist
+  // Klick-Handling für Raster
   handleClick(mouseX, mouseY) {
     for (let cell of this.grid) {
       if (
@@ -54,127 +53,17 @@ class Box {
         mouseY >= cell.y &&
         mouseY <= cell.y + cell.height
       ) {
-        cell.clicked = !cell.clicked; // Status umschalten
-        
+        console.log("Clicked on cell at", cell.x, cell.y);
+        cell.isSelected = !cell.isSelected;
+        if (cell.isSelected) {
+          cell.color = "blue";
+        } else {
+          cell.color = "red";
+        }
       }
     }
   }
 }
 
+// Externe Datei "klasse.js" importieren
 export default Box;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-const boxes = [
-  {
-    x: 250,
-    y: 50,
-    width: 100,
-    height: 100,
-    color: "grey",
-    dragging: false,
-    name: "Stein",
-  },
-  {
-    x: 400,
-    y: 50,
-    width: 100,
-    height: 100,
-    color: "red",
-    dragging: false,
-    name: "Eisen",
-  },
-  {
-    x: 250,
-    y: 200,
-    width: 100,
-    height: 100,
-    color: "green",
-    dragging: false,
-    name: "Holz",
-  },
-  {
-    z: 1,
-    x: 400,
-    y: 200,
-    width: 100,
-    height: 100,
-    color: "yellow",
-    dragging: false,
-    name: "Haus",
-  },
-];
-
-const resources = [
-  {
-    x: 0,
-    y: 0,
-    width: 200,
-    height: 200,
-    color: "lightgray",
-    name: "Berg",
-  },
-  {
-    x: 600,
-    y: 0,
-    width: 200,
-    height: 200,
-    color: "lightgreen",
-    name: "Wald",
-  },
-  {
-    x: 0,
-    y: 400,
-    width: 200,
-    height: 200,
-    color: "brown",
-    name: "Eisenader",
-  },
-  {
-    x: 600,
-    y: 400,
-    width: 200,
-    height: 200,
-    color: "lightblue",
-    name: "Wohngebiet",
-  },
-];
-*/
