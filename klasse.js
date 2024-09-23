@@ -1,14 +1,21 @@
+import Settings from "./settings.js";
+
 // Klasse für die importierte Box
-class ImportedBox {
-  constructor(ctx, x, y, width, height, color) {
+class Klasse {
+  constructor(ctx, x, y, width, height, color, img) {
     this.ctx = ctx; // Canvas-Kontext speichern
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.color = color;
+    this.img = img;
     this.grid = [];
     this.createGrid(); // Beim Erstellen wird das Raster erzeugt
+    this.waldImage = new Image()
+    this.waldImage.src = this.img
+    this.waldImage.onload = () => {console.log("imageLoaded");
+    }
   }
 
   // Methode, um die Box und das Raster zu zeichnen
@@ -18,10 +25,15 @@ class ImportedBox {
 
     // Raster zeichnen
     for (let cell of this.grid) {
-      this.ctx.fillStyle = cell.color;
+      if (cell.isSelected) {
+        this.ctx.drawImage(cell.image, cell.x, cell.y, cell.width, cell.height)
+      } else {
+        this.ctx.fillStyle = cell.color;
       this.ctx.fillRect(cell.x, cell.y, cell.width, cell.height);
       this.ctx.strokeStyle = "black";
       this.ctx.strokeRect(cell.x, cell.y, cell.width, cell.height);
+      }
+      
     }
     
   }
@@ -43,6 +55,7 @@ class ImportedBox {
           height: cellHeight,
           color:"rgba(0,0,0,0)",
           isSelected: false,
+          image: null,
         });
       }
     }
@@ -50,7 +63,7 @@ class ImportedBox {
 
   // Klick-Handling für Raster
   handleClick(mouseX, mouseY) {
-    console.log(this.grid);
+    // console.log(this.grid);
     
     // console.log(this.grid.map(cell => cell.color));
     
@@ -65,11 +78,13 @@ class ImportedBox {
         // console.log("Clicked on cell at", cell.x, cell.y);
         cell.isSelected = !cell.isSelected;
         if (cell.isSelected) {
-          cell.color = this.color;
+          cell.color = null;
+          cell.image = this.waldImage
+          console.log(cell);
         } else {
-          cell.color = "red";
-           
-          
+          cell.image = null;
+          // cell.color = Settings.colors.wald;
+          console.log(cell);
         }
         
       }
@@ -78,4 +93,4 @@ class ImportedBox {
 }
 
 // Externe Datei "klasse.js" importieren
-export default ImportedBox;
+export default Klasse;

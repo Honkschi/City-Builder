@@ -23,10 +23,13 @@ class ImportedBox {
       this.ctx.strokeStyle = "black";
       this.ctx.strokeRect(cell.x, cell.y, cell.width, cell.height);
     }
+    
   }
 
   // Methode, um das Raster zu erstellen
   createGrid(rows = 4, cols = 4) {
+    
+    
     const cellWidth = this.width / cols;
     const cellHeight = this.height / rows;
 
@@ -38,7 +41,7 @@ class ImportedBox {
           y: this.y + row * cellHeight,
           width: cellWidth,
           height: cellHeight,
-          color: "rgba(0,0,0,0)",
+          color:"rgba(0,0,0,0)",
           isSelected: false,
         });
       }
@@ -48,15 +51,16 @@ class ImportedBox {
   // Klick-Handling für Raster
   handleClick(mouseX, mouseY) {
     console.log(this.grid);
-
+    
     // console.log(this.grid.map(cell => cell.color));
-
+    
     for (let cell of this.grid) {
       if (
         mouseX >= cell.x &&
         mouseX <= cell.x + cell.width &&
         mouseY >= cell.y &&
         mouseY <= cell.y + cell.height
+        
       ) {
         // console.log("Clicked on cell at", cell.x, cell.y);
         cell.isSelected = !cell.isSelected;
@@ -64,7 +68,10 @@ class ImportedBox {
           cell.color = this.color;
         } else {
           cell.color = "red";
+           
+          
         }
+        
       }
     }
   }

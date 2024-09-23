@@ -1,4 +1,4 @@
-import ImportedBox from "./klasse.js";
+import Klasse from "./klasse.js";
 import Worker from "./worker.js";
 import Lager from "./lager.js";
 import Settings from "./settings.js";
@@ -10,10 +10,46 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 // Eine Instanz der importierten Box erstellen und den Kontext übergeben
-const berg = new ImportedBox(ctx, 0, 0, 200, 200, Settings.colors.berg);
-const wald = new ImportedBox(ctx, 600, 0, 200, 200, "lightblue");
-const eisen = new ImportedBox(ctx, 0, 400, 200, 200, "lightblue");
+const berg = new Klasse(
+  ctx,
+  0,
+  0,
+  200,
+  200,
+  Settings.colors.berg,
+  Settings.imgs.berg
+);
+const wald = new Klasse(
+  ctx,
+  600,
+  0,
+  200,
+  200,
+  Settings.colors.wald,
+  Settings.imgs.wald
+);
+const eisen = new Klasse(
+  ctx,
+  0,
+  400,
+  200,
+  200,
+  Settings.colors.eisen,
+  Settings.imgs.eisen
+);
+////////
 
+const image = new Image();
+image.src = "../assets/Factory.png"; // Pfad zum Kaktus-Bild
+
+image.onload = function () {
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(image, 0, 0);
+};
+
+
+///////
 const haus = new Haus(ctx, 600, 400, 200, 200, "lightblue");
 
 const movingBox1 = new Worker(600, 200, 50, 50, "red", "Transport");
@@ -83,7 +119,33 @@ function draw() {
   haus.draw();
 }
 
+function updateDisplayResouces() {
+  document.getElementById("woodResources").innerText = resources.wood;
+  document.getElementById("stoneResources").innerText = resources.stone;
+  document.getElementById("ironResources").innerText = resources.iron;
+}
+
+
+
+
+
+
+
+setInterval(() => {
+  resources.updateActiveWoodCells(wald.grid);
+  resources.updateActiveStoneCells(berg.grid);
+  resources.updateActiveIronCells(eisen.grid);
+
+  resources.wood += resources.woodAcc;
+  resources.stone += resources.stoneAcc;
+  resources.iron += resources.ironAcc;
+
+  updateDisplayResouces();
+  // resources.showEverysing();
+}, 10000); // Alle 10 Sekunden
+
 function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
   draw();
   requestAnimationFrame(animate);
 }
