@@ -1,13 +1,14 @@
-class Box {
-  constructor(x, y, width, height, color, name) {
+// Klasse für die importierte Box
+class ImportedBox {
+  constructor(ctx, x, y, width, height, color) {
+    this.ctx = ctx; // Canvas-Kontext speichern
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.color = color;
-    this.name = name;
     this.grid = [];
-    this.createGrid();
+    this.createGrid(); // Beim Erstellen wird das Raster erzeugt
   }
 
   // Methode, um die Box und das Raster zu zeichnen
@@ -17,15 +18,18 @@ class Box {
 
     // Raster zeichnen
     for (let cell of this.grid) {
-      this.ctx.strokeStyle = "black";
-      this.ctx.strokeRect(cell.x, cell.y, cell.width, cell.height);
       this.ctx.fillStyle = cell.color;
       this.ctx.fillRect(cell.x, cell.y, cell.width, cell.height);
+      this.ctx.strokeStyle = "black";
+      this.ctx.strokeRect(cell.x, cell.y, cell.width, cell.height);
     }
+    
   }
 
   // Methode, um das Raster zu erstellen
   createGrid(rows = 4, cols = 4) {
+    
+    
     const cellWidth = this.width / cols;
     const cellHeight = this.height / rows;
 
@@ -37,7 +41,7 @@ class Box {
           y: this.y + row * cellHeight,
           width: cellWidth,
           height: cellHeight,
-          color: "blue",
+          color:"rgba(0,0,0,0)",
           isSelected: false,
         });
       }
@@ -46,24 +50,33 @@ class Box {
 
   // Klick-Handling für Raster
   handleClick(mouseX, mouseY) {
+    console.log(this.grid.map(cell => cell.color));
+    
     for (let cell of this.grid) {
       if (
         mouseX >= cell.x &&
         mouseX <= cell.x + cell.width &&
         mouseY >= cell.y &&
         mouseY <= cell.y + cell.height
+        
       ) {
         console.log("Clicked on cell at", cell.x, cell.y);
         cell.isSelected = !cell.isSelected;
         if (cell.isSelected) {
-          cell.color = "blue";
+          cell.color = this.color;
+          // for (let i = 0; i < array.length; i++) {
+          //   const resouces = array[i];
+          //   console.log(resouces);
+          //   return resouces;
+          // }
         } else {
           cell.color = "red";
         }
+        
       }
     }
   }
 }
 
 // Externe Datei "klasse.js" importieren
-export default Box;
+export default ImportedBox;

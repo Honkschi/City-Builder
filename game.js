@@ -1,24 +1,38 @@
-import Box from "./boxen.js";
+import ImportedBox from "./klasse.js";
 import Worker from "./worker.js";
+import Lager from "./lager.js";
+import Settings from "./settings.js";
 
+// Canvas und Kontext initialisieren
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const resources = [
-  new Box(0, 0, 200, 200, "lightgrey", "Berg"),
-  new Box(600, 0, 200, 200, "lightgreen", "Wald"),
-  new Box(0, 400, 200, 200, "brown", "Eisenader"),
-  new Box(600, 400, 200, 200, "lightblue", "Wohngebiet"),
-  new Box(350, 250, 100, 100, "yellow", "Lager"),
-];
+// Eine Instanz der importierten Box erstellen und den Kontext übergeben
+const berg  = new ImportedBox(ctx,   0,   0, 200, 200, Settings.colors.berg);
+const wald  = new ImportedBox(ctx, 600,   0, 200, 200, "lightblue");
+const eisen = new ImportedBox(ctx,   0, 400, 200, 200, "lightblue");
+const haus  = new ImportedBox(ctx, 600, 400, 200, 200, "lightblue");
 
 const movingBox1 = new Worker(600, 200, 50, 50, "red", "Transport");
 const movingBox2 = new Worker(150, 200, 50, 50, "red", "Transport");
 const movingBox3 = new Worker(150, 350, 50, 50, "red", "Transport");
 
+const lager = new Lager(350, 250, 100, 100, "yellow", "Lager");
+
 let direction = 1; // 1 für Wald -> Lager, -1 für Lager -> Wald
-let isDragging = false;
-let offsetX, offsetY;
+
+// Event Listener für Mausklicks hinzufügen
+canvas.addEventListener("click", (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  // Überprüfen, ob auf ein Rechteck im Raster geklickt wurde
+  berg.handleClick(mouseX, mouseY);
+  wald.handleClick(mouseX, mouseY);
+  eisen.handleClick(mouseX, mouseY);
+  haus.handleClick(mouseX, mouseY);
+});
 
 function boxnames(box) {
   // Zeichne die Box
@@ -36,40 +50,10 @@ function boxnames(box) {
   ctx.fillText(box.name, textX, textY); // Text in der Box
 }
 
-// Event Listener für Mausklicks hinzufügen
-canvas.addEventListener("mousemove", (event) => {
-  if (isDragging) {
-    const mousePos = getMousePos(canvas, event);
-    rect.x = mousePos.x - offsetX;
-    rect.y = mousePos.y - offsetY;
-    drawRect();
-  }
-  console.log(isDragging);
-  
-});
-
-function getMousePos(canvas, event) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top,
-   
-  };
-}
-
-
-
-
+// Hauptzeichnungsfunktion
 function draw() {
-  // Update funktion
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (const box of resources) {
-    ctx.fillStyle = box.color;
-    ctx.fillRect(box.x, box.y, box.width, box.height);
-    boxnames(box);
-  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Canvas löschen
 
-  // Aktualisiere die Position der bewegenden Box
   if (direction === 1 && movingBox1.x >= 600) {
     direction = -1;
   } else if (direction === -1 && movingBox1.x <= 400) {
@@ -83,16 +67,19 @@ function draw() {
   boxnames(movingBox1);
   boxnames(movingBox2);
   boxnames(movingBox3);
+
+  boxnames(lager)
+
+  // Importierte Box und Raster zeichnen
+  
+  
+  berg.draw();
+  wald.draw();
+  eisen.draw();
+  haus.draw();
 }
 
-console.log(getMousePos.rect);
-
-
-
-
-
 function animate() {
-  
   draw();
   requestAnimationFrame(animate);
 }
