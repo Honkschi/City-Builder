@@ -2,22 +2,27 @@ import ImportedBox from "./klasse.js";
 import Worker from "./worker.js";
 import Lager from "./lager.js";
 import Settings from "./settings.js";
+import Resources from "./Resources.js";
+import Haus from "./Haus.js";
 
 // Canvas und Kontext initialisieren
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 // Eine Instanz der importierten Box erstellen und den Kontext übergeben
-const berg  = new ImportedBox(ctx,   0,   0, 200, 200, Settings.colors.berg);
-const wald  = new ImportedBox(ctx, 600,   0, 200, 200, "lightblue");
-const eisen = new ImportedBox(ctx,   0, 400, 200, 200, "lightblue");
-const haus  = new ImportedBox(ctx, 600, 400, 200, 200, "lightblue");
+const berg = new ImportedBox(ctx, 0, 0, 200, 200, Settings.colors.berg);
+const wald = new ImportedBox(ctx, 600, 0, 200, 200, "lightblue");
+const eisen = new ImportedBox(ctx, 0, 400, 200, 200, "lightblue");
+
+const haus = new Haus(ctx, 600, 400, 200, 200, "lightblue");
 
 const movingBox1 = new Worker(600, 200, 50, 50, "red", "Transport");
 const movingBox2 = new Worker(150, 200, 50, 50, "red", "Transport");
 const movingBox3 = new Worker(150, 350, 50, 50, "red", "Transport");
 
 const lager = new Lager(350, 250, 100, 100, "yellow", "Lager");
+
+const resources = new Resources();
 
 let direction = 1; // 1 für Wald -> Lager, -1 für Lager -> Wald
 
@@ -68,11 +73,10 @@ function draw() {
   boxnames(movingBox2);
   boxnames(movingBox3);
 
-  boxnames(lager)
+  boxnames(lager);
 
   // Importierte Box und Raster zeichnen
-  
-  
+
   berg.draw();
   wald.draw();
   eisen.draw();
