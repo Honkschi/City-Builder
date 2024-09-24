@@ -1,8 +1,8 @@
-import Settings from "./settings.js";
+
 
 // Klasse für die importierte Box
 class Klasse {
-  constructor(ctx, x, y, width, height, color, img) {
+  constructor(ctx, x, y, width, height, color, img, resources, isHouse) {
     this.ctx = ctx; // Canvas-Kontext speichern
     this.x = x;
     this.y = y;
@@ -16,6 +16,14 @@ class Klasse {
     this.waldImage.src = this.img
     this.waldImage.onload = () => {console.log("imageLoaded");
     }
+    this.cost = {
+      wood: 10,
+      stone: 5,
+      iron: 2,
+    }
+    this.resources = resources;
+    this.isHouse = isHouse;
+    /* 10 wood, 5 stone, 2 eisen */
   }
 
   // Methode, um die Box und das Raster zu zeichnen
@@ -75,17 +83,35 @@ class Klasse {
         mouseY <= cell.y + cell.height
         
       ) {
+        if (this.isHouse) {
+          if (this.resources.wood >= this.cost.wood && this.resources.stone >= this.cost.stone && this.resources.iron >= this.cost.iron) {
+          cell.isSelected = !cell.isSelected;
+          if (cell.isSelected) {
+            cell.color = null;
+            cell.image = this.waldImage;
+            console.log(cell);
+            
+            this.resources.wood -= this.cost.wood,
+            this.resources.stone -= this.cost.stone,
+            this.resources.iron -= this.cost.iron
+          } else{
+            cell.image = null;
+          console.log(cell);
+          }
+        } else {
+          return;
+        }
+        
         // console.log("Clicked on cell at", cell.x, cell.y);
+      } else {
         cell.isSelected = !cell.isSelected;
         if (cell.isSelected) {
           cell.color = null;
-          cell.image = this.waldImage
-          console.log(cell);
-        } else {
-          cell.image = null;
-          // cell.color = Settings.colors.wald;
+          cell.image = this.waldImage;
           console.log(cell);
         }
+      }
+        
         
       }
     }
