@@ -23,7 +23,7 @@ class Klasse {
     }
     this.resources = resources;
     this.isHouse = isHouse;
-    /* 10 wood, 5 stone, 2 eisen */
+    /* 10 wood, 5 stone, 2 iron */
   }
 
   // Methode, um die Box und das Raster zu zeichnen
